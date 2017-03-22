@@ -2,13 +2,15 @@ require 'chunky_png'
 
 STDOUT.sync = true
 
-@tall = 4
-@aspe = 2
+@tall = 4 # row height in module units
+@wbyh = 2 # barcode's width/height
+@pads = 2 # padding for the barcode
 
-@pads = 2
+# start and stop codes
 @lbar = '0' * @pads + '11111111010101000'
 @rbar = '111111101000101001' + '0' * @pads
 
+# text submodes
 @mode = [
   [0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x20,0xfd,0xfe,0xff], # upper
   [0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x20,0xfd,0xfe,0xff], # lower
@@ -16,6 +18,7 @@ STDOUT.sync = true
   [0x3b,0x3c,0x3e,0x40,0x5b,0x5c,0x5d,0x5f,0x60,0x7e,0x21,0x0d,0x09,0x2c,0x3a,0x0a,0x2d,0x2e,0x24,0x2f,0x22,0x7c,0x2a,0x28,0x29,0x3f,0x7b,0x7d,0x27,0xff], # punctuation
 ]
 
+# used to jump between text submodes
 @jump = {
   '01' => [27    ],
   '02' => [28    ],
@@ -31,6 +34,7 @@ STDOUT.sync = true
   '32' => [29, 28],
 }
 
+# reed solomon error correcting factors
 @reed = [
   [ # ecl 0 (2 factors)
     0x01b, 0x395], #   2
@@ -59,6 +63,7 @@ STDOUT.sync = true
     0x0d3, 0x14a, 0x21b, 0x129, 0x33b, 0x361, 0x025, 0x205, 0x342, 0x13b, 0x226, 0x056, 0x321, 0x004, 0x06c, 0x21b], # 128
 ]
 
+# codeword bits, by cluster
 @look = [
   [ # cluster 0 -----------------------------------------------------------------------
     0x1d5c0,0x1eaf0,0x1f57c,0x1d4e0,0x1ea78,0x1f53e,0x1a8c0,0x1d470,0x1a860,0x15040, #  10
@@ -438,40 +443,42 @@ end
 
 # ==
 
-cws = encode("A standalone PDF-417!")
-
-cws.size <= 925 or raise "ERROR: Too many codewords (the limit is 925, you have #{cws.size})"
-
-cnt = cws.size
+# encode text message and determine codeword counts
+cws = encode("This is a shiny standalone PDF-417!")
+cnt = cws.size; raise "ERROR: Max codewords is 925, you have #{cnt}" if cnt > 925
 ecl = get_ecl(cnt)
 err = 2 << ecl
 nce = cnt + err + 1
 
-# need to verify this math, precision, casting to floats, etc.
-col = ((Math.sqrt(4761 + 68 * @aspe * @tall * nce) - 69) / 34).round
+# a = 17 units per codeword
+# b = 69 units = (start=17, left row ind=17, right row ind=17, stop=18)
+# c = -(nce * y / aspect ratio)
+
+# find optimal columns using the quadratic equation [-b ± √(b²-4ac)] / 2a
+col = ((Math.sqrt(69 * 69 + 4 * 17 * nce * @tall * @wbyh) - 69) / (2 * 17)).round
 col = col < 1 ? 1 : 30 unless col.between?(1, 30)
-row = (nce.to_f / col).ceil
+row = (nce / col.to_f).ceil
 tot = col * row
 unless row.between?(3, 90)
   row = row < 3 ? 3 : 90
-  col = (tot / row).ceil
+  col = (tot / row.to_f).ceil # why not (nce / col.to_f).ceil ??
   tot = col * row
 end
 if tot > 928 # adjust dimensions to fit
-  col, row = (@aspe - (17.0 * 29 / 32)).abs < (@aspe - (17.0 * 16 / 58)).abs ? [29, 32] : [16, 58]
+  col, row = (@wbyh - (17.0 * 29 / 32)).abs < (@wbyh - (17.0 * 16 / 58)).abs ? [29, 32] : [16, 58]
   tot = col * row # 928
 end
 
 # calculate padding and prepend the symbol length descriptor
 if (pad = tot - nce) > 0
-  if (tot - row) == nce
+  if (tot - row) == nce # ??? when does this get triggered???
     row -= 1
-    tot -= rows
+    tot -= row
   else
     cws.concat([900] * pad)
   end
 end
-cws.unshift(tot - err)
+cws.unshift(tot - err) # same as (cnt + pad + 1) ?
 
 # append error correction codewords
 ecw = get_ecc(cws, ecl)
@@ -521,5 +528,4 @@ shh = ['0'] * cols
 @pads.times { bar.push    shh } # bottom quiet zone
 
 # bar.each {|e| p e }; nil
-
 File.write('sample.png', to_png(bar))
