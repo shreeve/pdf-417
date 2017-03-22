@@ -450,10 +450,6 @@ ecl = get_ecl(cnt)
 err = 2 << ecl
 nce = cnt + err + 1
 
-# a = 17 units per codeword
-# b = 69 units = (start=17, left row ind=17, right row ind=17, stop=18)
-# c = -(nce * y / aspect ratio)
-
 # find optimal columns using the quadratic equation [-b ± √(b²-4ac)] / 2a
 col = ((Math.sqrt(69 * 69 + 4 * 17 * nce * @tall * @wbyh) - 69) / (2 * 17)).round
 col = col < 1 ? 1 : 30 unless col.between?(1, 30)
