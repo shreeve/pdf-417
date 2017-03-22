@@ -522,4 +522,4 @@ shh = ['0'] * cols
 
 # bar.each {|e| p e }; nil
 
-File.write('show.png', to_png(bar))
+File.write('sample.png', to_png(bar))
