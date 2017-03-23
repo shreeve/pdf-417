@@ -474,8 +474,6 @@ ecw = get_ecc(cws, ecl)
 cws.concat(ecw)
 
 # create barcode array
-rows =  row      * @tall +      2 * @pads # seems to make sense... rows + t/b spacing
-cols = (col + 2) * 17    + 35 + 2 * @pads # cols + l/r indicator * 17 + (start/stop + 1???) + r/l spacing?
 bar = []
 cid = 0
 ind = 0
@@ -512,9 +510,8 @@ row.times do |r|
 end
 
 # top and bottom quiet zones
-shh = ['0'] * cols
-@pads.times { bar.unshift shh } # top quiet zone
-@pads.times { bar.push    shh } # bottom quiet zone
+zone = ['0'] * (col * 17 + 69 + 2 * @pads) # pad, start, lri, cols, rri, stop, pad
+@pads.times { bar.unshift zone } # top quiet zone
+@pads.times { bar.push    zone } # bottom quiet zone
 
-# bar.each {|e| p e }; nil
 File.write('sample.png', to_png(bar))
