@@ -445,7 +445,7 @@ end
 
 # encode text message and determine codeword counts
 cws = encode("This is a shiny standalone PDF-417!")
-cnt = cws.size; raise "ERROR: Max codewords is 925, you have #{cnt}" if cnt > 925
+cnt = cws.size; raise "ERROR: Max codeword count is 925, you have #{cnt}" if cnt > 925
 ecl = get_ecl(cnt)
 err = 2 << ecl
 nce = cnt + err + 1
