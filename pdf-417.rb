@@ -466,14 +466,7 @@ if tot > 928 # adjust dimensions to fit
 end
 
 # calculate padding and prepend the symbol length descriptor
-if (pad = tot - nce) > 0
-  if (tot - row) == nce # ??? when does this get triggered???
-    row -= 1
-    tot -= row
-  else
-    cws.concat([900] * pad)
-  end
-end
+(pad = tot - nce) > 0 and cws.concat([900] * pad)
 cws.unshift(tot - err) # same as (cnt + pad + 1) ?
 
 # append error correction codewords
