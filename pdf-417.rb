@@ -4,7 +4,7 @@ STDOUT.sync = true
 
 @tall = 4 # row height in module units
 @wbyh = 2 # barcode's width/height
-@pads = 2 # padding for the barcode
+@pads = 2 # padding around barcode
 
 # start and stop codes
 @lbar = '0' * @pads + '11111111010101000'
