@@ -192,4 +192,4 @@ class PDF417
   end
 end
 
-p x = PDF417.to_png("trail.png", "Is it actually working?")
+# PDF417.to_png("sample.png", "This is a nice PDF-417 barcode!")
