@@ -16,7 +16,9 @@ PDF417.to_png("sample.png", "This is my PDF417 barcode!")
 
 ## Result
 
-![Image of Yaktocat](https://github.com/shreeve/pdf-417/sample.png)
+The above example produces:
+
+![Sample PDF417 barcode](/sample.png?raw=true "Sample PDF417 barcode")
 
 ## License
 
