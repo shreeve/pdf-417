@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    pdf-417 (0.5.0)
+      chunky_png (~> 1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -7,7 +13,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  chunky_png
+  pdf-417!
 
 BUNDLED WITH
-   1.14.5
+   1.14.6
