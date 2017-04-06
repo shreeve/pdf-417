@@ -14,9 +14,9 @@ class PDF417
     @wbyh = 2 # barcode's width/height
     @pads = 2 # padding around barcode
 
-    @str = str
-    @cws = nil
-    @bar = nil
+    @str = str # string to encode
+    @cws = nil # codeword array
+    @bar = nil # barcode pattern
   end
 
   def encode(str=nil)
