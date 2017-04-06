@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "pdf-417"
-  s.version     = "0.9.2"
+  s.version     = "0.9.3"
   s.author      = "Steve Shreeve"
   s.email       = "steve.shreeve@gmail.com"
   s.summary     = "Generate PDF-417 barcodes"
