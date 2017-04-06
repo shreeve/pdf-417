@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "pdf-417"
-  s.version     = "0.9.0"
+  s.version     = "0.9.2"
   s.author      = "Steve Shreeve"
   s.email       = "steve.shreeve@gmail.com"
   s.summary     = "Generate PDF-417 barcodes"
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/shreeve/pdf-417"
   s.license     = "MIT"
   s.platform    = Gem::Platform::RUBY
-  s.files       = `git ls-files`.split("\n") - %w[.gitignore]
+  s.files       = `git ls-files`.split("\n") - %w[.gitignore sample.png]
   s.add_runtime_dependency "chunky_png", "~> 1"
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 end
