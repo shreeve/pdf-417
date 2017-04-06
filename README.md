@@ -20,6 +20,11 @@ The above example produces:
 
 ![Sample PDF417 barcode](/sample.png?raw=true "Sample PDF417 barcode")
 
+## Inspiration
+
+* https://github.com/bkuzmic/pdf417-js
+* http://www.tcpdf.org/
+
 ## License
 
 This software is licensed under terms of the MIT License.
