@@ -23,19 +23,18 @@ class PDF417
     str = str ? (@str = str) : @str
     all = str.split(//)
     max = all.size - 1
-    use = 0
-    ary = TEXT_MODE[use]
+    ary = TEXT_MODE[cur = nxt = 0]
     out = []
 
     # map to the four text submodes
     all.each_with_index do |chr, pos|
       unless val = ary.index(ord = chr.ord)
-        if now = TEXT_MODE.use {|chk, now| now if (now != use) && (val = chk.index(ord)) }
-          if (pos == max || ary.index(all[pos + 1].ord)) && (now == 3 || (now == 0 && use == 1))
-            out.push(now == 3 ? 29 : 27) # shift modes only for the next character
+        if nxt = TEXT_MODE.probe {|row, nxt| nxt if (nxt != cur) && (val = row.index(ord)) }
+	        if (nxt == 3 || (nxt == 0 && cur == 1)) && (ary.index(all[pos + 1].ord) || pos == max)
+            out.push(nxt == 3 ? 29 : 27) # only shift modes for the next character
           else
-            out.concat(TEXT_JUMP["#{use}#{now}"]) # jump to new mode
-            ary = TEXT_MODE[use = now]
+            out.concat(TEXT_JUMP["#{cur}#{nxt}"]) # jump to new mode
+            ary = TEXT_MODE[cur = nxt]
           end
         end
       end
