@@ -21,7 +21,7 @@ class PDF417
 
   def encode(str=nil)
     str = str ? (@str = str) : @str
-    all = str.split(//)
+    all = str.split('')
     max = all.size - 1
     ary = TEXT_MODE[cur = nxt = 0]
     out = []
