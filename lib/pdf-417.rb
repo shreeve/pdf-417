@@ -26,7 +26,7 @@ class PDF417
     ary = TEXT_MODE[cur = nxt = 0]
     out = []
 
-    # map to the four text submodes
+    # map to text submodes
     all.each_with_index do |chr, pos|
       unless val = ary.index(ord = chr.ord)
         if nxt = TEXT_MODE.probe {|row, nxt| nxt if (nxt != cur) && (val = row.index(ord)) }
