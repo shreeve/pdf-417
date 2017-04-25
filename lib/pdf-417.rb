@@ -25,21 +25,21 @@ class PDF417
     max = all.size - 1
     use = 0
     ary = TEXT_MODE[use]
+    out = []
 
     # map to the four text submodes
-    out = all.map.with_index.inject([]) do |out,(chr,pos)|
-      if val = ary.index(ord = chr.ord)
-        out << val
-      elsif now = TEXT_MODE.use {|chk, now| now if (now != use) && (val = chk.index(ord)) }
-        if (pos == max || ary.index(all[pos + 1].ord)) && (now == 3 || (now == 0 && use == 1))
-          out.push(now == 3 ? 29 : 27) # shift modes only for the next character
-        else
-          out.concat(TEXT_JUMP["#{use}#{now}"]) # jump to new mode
-          ary = TEXT_MODE[use = now]
+    all.each_with_index do |chr, pos|
+      unless val = ary.index(ord = chr.ord)
+        if now = TEXT_MODE.use {|chk, now| now if (now != use) && (val = chk.index(ord)) }
+          if (pos == max || ary.index(all[pos + 1].ord)) && (now == 3 || (now == 0 && use == 1))
+            out.push(now == 3 ? 29 : 27) # shift modes only for the next character
+          else
+            out.concat(TEXT_JUMP["#{use}#{now}"]) # jump to new mode
+            ary = TEXT_MODE[use = now]
+          end
         end
-        out << val
       end
-      out
+      out.push val
     end
     out.push(29) unless out.size.even?
 
