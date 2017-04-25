@@ -134,14 +134,14 @@ class PDF417
       end]) + rbar
 
       # add a row
-      all = out.split(//); @tall.times { bar << all }
+      @tall.times { bar << out }
 
       # next cluster
       cid = (cid += 1) % 3
     end
 
     # top and bottom quiet zones
-    zone = ['0'] * (col * 17 + 69 + 2 * @pads) # pad, start, lri, cols, rri, stop, pad
+    zone = '0' * (col * 17 + 69 + 2 * @pads) # pad, start, lri, cols, rri, stop, pad
     @pads.times { bar.unshift zone } # top quiet zone
     @pads.times { bar.push    zone } # bottom quiet zone
 
@@ -165,7 +165,7 @@ class PDF417
     canvas = ChunkyPNG::Image.new(full_width, full_height, ChunkyPNG::Color::WHITE)
 
     x, y = opts[:margin], opts[:margin]
-    dots = ary.map {|l| l.map {|c| c == '1' }}
+    dots = ary.map {|l| l.split('').map {|c| c == '1' }}
     dots.each do |line|
       line.each do |bar|
         if bar
