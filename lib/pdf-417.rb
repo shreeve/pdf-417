@@ -1,7 +1,7 @@
 require "constants"
 
 module Enumerable
-  def use
+  def probe
     out = nil
     each_with_index {|val, i| out = yield(val, i) and break}
     out
