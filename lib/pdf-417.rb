@@ -30,7 +30,7 @@ class PDF417
     all.each_with_index do |chr, pos|
       unless val = ary.index(ord = chr.ord)
         if nxt = TEXT_MODE.probe {|row, nxt| nxt if (nxt != cur) && (val = row.index(ord)) }
-	        if (nxt == 3 || (nxt == 0 && cur == 1)) && (pos == max || ary.index(all[pos + 1].ord))
+          if (nxt == 3 || (nxt == 0 && cur == 1)) && (pos == max || ary.index(all[pos + 1].ord))
             out.push(nxt == 3 ? 29 : 27) # only shift modes for the next character
           else
             out.concat(TEXT_JUMP["#{cur}#{nxt}"]) # jump to new mode
