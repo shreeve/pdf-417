@@ -10,8 +10,8 @@ end
 
 class PDF417
   def initialize(str=nil)
-    @tall = 4 # row height in module units
-    @wbyh = 2 # barcode's width/height
+    @tall = 2 # row height in module units
+    @wbyh = 3 # barcode's width/height
     @pads = 2 # padding around barcode
 
     @str = str # string to encode
